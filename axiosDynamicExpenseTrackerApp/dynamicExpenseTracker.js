@@ -6,8 +6,10 @@ function editid(id)
 }
 
 
-function saveToServer(e)
+async function saveToServer(e)
 {
+    try
+    {
     e.preventDefault()
 
     let amount=e.target.expense_amount.value;
@@ -22,61 +24,101 @@ function saveToServer(e)
 
     if(ID)  
     {
-        axios.put(`https://crudcrud.com/api/7ecbc6b6c89247d2a5a9414e9c719e97/expenseTrack/${ID}`,obj)  // on submit edit form put request will be sent
-        .then((res)=>
-        {
-            onScreenAfterEdit()
-        })
-        .catch((err)=>
-        {
-            console.log(err)
-        })
+       let res= await axios.put(`https://crudcrud.com/api/7ecbc6b6c89247d2a5a9414e9c719e97/expenseTrack/${ID}`,obj)  // on submit edit form put request will be sent
+       try
+       {
+        onScreenAfterEdit()
+       }
+       catch(err)
+       {
+        console.log(err)
+       }
+        // .then((res)=>
+        // {
+        //     onScreenAfterEdit()
+        // })
+        // .catch((err)=>
+        // {
+        //     console.log(err)
+        // })
     }
     else
     {
-        axios.post("https://crudcrud.com/api/7ecbc6b6c89247d2a5a9414e9c719e97/expenseTrack",obj)  // on submit fresh form post requet will be sent
-        .then((res)=>
+        let res=axios.post("https://crudcrud.com/api/7ecbc6b6c89247d2a5a9414e9c719e97/expenseTrack",obj)  // on submit fresh form post requet will be sent
+        try
         {
             onScreen(res.data)
-        })
-        .catch((err)=>
+        }
+        catch(err)
         {
             console.log(err)
-        })
+        }
+        // .then((res)=>
+        // {
+        //     onScreen(res.data)
+        // })
+        // .catch((err)=>
+        // {
+        //     console.log(err)
+        // })
         }
     
-
+    }
+    catch(err)
+    {
+        console.log(err)
+    }
 }
 
 // DOMContentLoaded fire when page refreshed, will get all stored data from server
 
 window.addEventListener('DOMContentLoaded',onload)
 
-function onload(e)
+async function onload(e)
 {
-    axios.get("https://crudcrud.com/api/7ecbc6b6c89247d2a5a9414e9c719e97/expenseTrack")
-    .then((res)=>
+    let res=await axios.get("https://crudcrud.com/api/7ecbc6b6c89247d2a5a9414e9c719e97/expenseTrack")
+    try
     {
         res.data.forEach((key)=>
         {
             onScreen(key)
         })
-    })
-    .catch((err)=>
+    }
+    catch(err)
     {
         console.log(err)
-    })
+    }
+    // .then((res)=>
+    // {
+    //     res.data.forEach((key)=>
+    //     {
+    //         onScreen(key)
+    //     })
+    // })
+    // .catch((err)=>
+    // {
+    //     console.log(err)
+    // })
 }
 
 //after edit , edit object will be reprinted on screen
-function onScreenAfterEdit()
+async function onScreenAfterEdit()
 {
-    axios.get(`https://crudcrud.com/api/7ecbc6b6c89247d2a5a9414e9c719e97/expenseTrack/${ID}`)
-    .then((res)=>
+    let res=await axios.get(`https://crudcrud.com/api/7ecbc6b6c89247d2a5a9414e9c719e97/expenseTrack/${ID}`)
+    try
     {
         onScreen(res.data)
-        ID=''                // clearing ID to prevent repeat put request
-    })
+        ID=''
+    }
+    catch(err)
+    {
+        console.log(err)
+    }
+    // .then((res)=>
+    // {
+    //     onScreen(res.data)
+    //     ID=''                // clearing ID to prevent repeat put request
+    // })
 }
 
 
@@ -101,17 +143,25 @@ function editData(id,amount,des,cat)
     editid(id);             // calling editid() declared above to store id of particular object to be edited
 }
 
-function deleteData(id)
+async function deleteData(id)
 {
-    axios.delete(`https://crudcrud.com/api/7ecbc6b6c89247d2a5a9414e9c719e97/expenseTrack/${id}`)
-    .then((res)=>
+    let res=await axios.delete(`https://crudcrud.com/api/7ecbc6b6c89247d2a5a9414e9c719e97/expenseTrack/${id}`)
+    try
     {
         removeFromScreen(id)
-    })
-    .catch((err)=>
+    }
+    catch(err)
     {
         console.log(err)
-    })
+    }
+    // .then((res)=>
+    // {
+    //     removeFromScreen(id)
+    // })
+    // .catch((err)=>
+    // {
+    //     console.log(err)
+    // })
 }
 
 
